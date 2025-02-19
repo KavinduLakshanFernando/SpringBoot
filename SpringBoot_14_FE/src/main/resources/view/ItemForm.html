@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="container mt-4">
+
+<h2 class="mb-4">Item Management</h2>
+
+<!-- Item Form -->
+<form id="itemForm">
+    <input type="hidden" id="editIndex"> <!-- Hidden field to track row being edited -->
+
+    <div class="mb-3">
+        <label for="item_id" class="form-label">Item ID</label>
+        <input type="text" class="form-control" id="item_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" required>
+    </div>
+    <div class="mb-3">
+        <label for="unit_price" class="form-label">Unit Price</label>
+        <input type="number" class="form-control" id="unit_price" step="0.01" required>
+    </div>
+    <div class="mb-3">
+        <label for="qty" class="form-label">Quantity</label>
+        <input type="number" class="form-control" id="qty" required>
+    </div>
+    <button type="submit" id="itemSave" class="btn btn-primary">Add Item</button>
+    <button type="submit" id="itemupdate" class="btn btn-primary">Update Item</button>
+    <button type="button" id="itemdelete" class="btn btn-secondary">Delete</button>
+    <a href="CustomerForm.html"><button type="button" class="btn btn-primary">Customer Form</button></a>
+
+</form>
+
+<!-- Item Table -->
+<h3 class="mt-5">Item List</h3>
+<table class="table table-bordered mt-3">
+    <thead class="table-dark">
+    <tr>
+        <th>Item ID</th>
+        <th>Description</th>
+        <th>Unit Price</th>
+        <th>Quantity</th>
+    </tr>
+    </thead>
+    <tbody id="itemTableBody">
+    <!-- Items will be added here dynamically -->
+    </tbody>
+</table>
+
+</body>
+<script src="js/jquery-3.7.1.min.js"></script>
+<script>
+    getAllItem();
+    $("#itemSave").on("click", function(event) {
+        var iid = $("#item_id").val();
+        var description = $("#description").val();
+        var unit_price = $("#unit_price").val();
+        var qty = $("#qty").val();
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/item/save',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                iid: iid,
+                description: description,
+                u_Price: unit_price,
+                qty: qty
+            }),
+            success: function (response) {
+                console.log("Item saved successfully!");
+                alert("Item saved successfully!");
+                getAllItem();
+            },
+            error: function (xhr, status, error) {
+                console.log("Error saving item: " + error);
+            }
+        });
+    });
+
+    $("#itemupdate").on("click", function(event) {
+        var iid = $("#item_id").val();
+        var description = $("#description").val();
+        var unit_price = $("#unit_price").val();
+        var qty = $("#qty").val();
+
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/item/update',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                iid: iid,
+                description: description,
+                u_Price: unit_price,
+                qty: qty
+            }),
+            success: function (response) {
+                console.log("Item updated successfully!");
+                alert("Item updated successfully!");
+                getAllItem();
+            },
+            error: function (xhr, status, error) {
+                console.log("Error updating item: " + error);
+            }
+        });
+    });
+
+    $("#itemdelete").on("click", function(event) {
+        var iid = $("#item_id").val();
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/item/delete/' + iid,
+            method: 'DELETE',
+            success: function (response) {
+                console.log("Item deleted successfully!");
+                alert("Item deleted successfully!");
+                getAllItem();
+            },
+            error: function (xhr, status, error) {
+                console.log("Error deleting item: " + error);
+            }
+        });
+    });
+
+    function getAllItem() {
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/item/getAll',
+            method: 'GET',
+            success: function (response) {
+                $('#itemTableBody').empty();
+                response.forEach(item => {
+                    $('#itemTableBody').append(`
+                        <tr>
+                            <td>${item.iid}</td>
+                            <td>${item.description}</td>
+                            <td>${item.u_Price}</td>
+                            <td>${item.qty}</td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+</script>
+</html>

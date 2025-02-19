@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="SpringBoot_14" />
+        <module name="SpringBoot_14_FE" />
+        <module name="04_FullModeVsLightMods" />
+        <module name="01_Spring_Core" />
+        <module name="10_BackEnd" />
+        <module name="06_Runtime_Value_Injection" />
+        <module name="12_Spring_Data_JPA" />
+        <module name="08_Spring_Web_MVC" />
+        <module name="05_Configuration" />
+        <module name="09_RestController" />
+        <module name="Spring_Bean_LifeCycle" />
+        <module name="07_Spring_Enviroment" />
+        <module name="03_Spring_DI" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="13_FrontEnd" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="13_FrontEnd" options="-parameters" />
+      <module name="SpringBoot_13" options="" />
+      <module name="SpringBoot_14" options="-parameters" />
+    </option>
+  </component>
+</project>
