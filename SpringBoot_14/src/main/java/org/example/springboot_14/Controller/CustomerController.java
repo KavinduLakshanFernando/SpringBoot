@@ -30,9 +30,6 @@ public class CustomerController {
         }else {
             return new ResponseUtill(400,"Customer Not Added",null);
         }
-
-
-
     }
 
     @PutMapping("update")
