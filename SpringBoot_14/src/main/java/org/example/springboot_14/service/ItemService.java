@@ -41,4 +41,12 @@ public class ItemService {
         itemRepo.deleteById(iid);
 
     }
+
+    public List<String> getAllItemIDs() {
+        return itemRepo.findAllIIDs();
+    }
+
+    public ItemDTO getItemData(String iid) {
+        return modelMapper.map(itemRepo.getItemData(iid),ItemDTO.class);
+    }
 }

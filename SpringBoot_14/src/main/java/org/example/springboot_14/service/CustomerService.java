@@ -45,7 +45,8 @@ public class CustomerService {
         return customerRepo.findAllCIDS();
     }
 
-    public Object getCustomerData(String id) {
-        return customerRepo.getCustomerData(id);
+    public CustomerDTO getCustomerData(String id) {
+        return modelMapper.map(customerRepo.getCustomerData(id),CustomerDTO.class);
+
     }
 }

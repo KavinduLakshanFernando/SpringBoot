@@ -94,8 +94,8 @@
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Item-Code</th>
-                    <th scope="col">Description</th>
+                    <th scope="col">Cu_id</th>
+                    <th scope="col">ItemId</th>
                     <th scope="col">Unit-Price</th>
                     <th scope="col">QTY On Hand</th>
                     <th scope="col">QTY</th>
@@ -113,10 +113,13 @@
 </body>
 <script src="js/jquery-3.7.1.min.js"></script>
 <script>
+
+    let cart = [];
+    var tot = 0;
     loadCustomerIds()
     function loadCustomerIds() {
         $.ajax({
-            url: 'http://localhost:8080/api/v1/placeOrder/getCId',
+            url: 'http://localhost:8080/api/v1/order/getCId',
             method: 'GET',
             success:function (response){
                 $("#customerSelect").empty();
@@ -140,7 +143,7 @@
     $("#customerSelect").on('change', (e) => {
         let cid = e.target.value;
         $.ajax({
-            url: 'http://localhost:8080/api/v1/placeOrder/getCData' + cid,
+            url: 'http://localhost:8080/api/v1/order/getCData/' + cid,
             method: 'GET',
             success: function(response) {
                 document.getElementById("customerName2").value = response.name;
@@ -151,6 +154,84 @@
             }
         });
     })
+
+    loadItemIds();
+    function loadItemIds() {
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/order/getIid',
+            method: 'GET',
+            success: function(response) {
+                $("#itemSelect").empty();
+                $('#itemSelect').append(`<option value="0">Select Item</option>`);
+                let data = response;
+                for (let i = 0; i < data.length; i++) {
+                    let row = `<option value="${data[i]}">${data[i]}</option>`;
+                    $('#itemSelect').append(row);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    $("#itemSelect").on('change', (e) => {
+        let iid = e.target.value;
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/order/getIData/' + iid,
+            method: 'GET',
+            success: function(response) {
+
+                console.log(response);
+                document.getElementById("itemName").value = response.description;
+                document.getElementById("unitPrice").value = response.u_Price;
+                document.getElementById("qtyOnHand").value = response.qty;
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    })
+
+    $("#cart").click((e) => {
+        console.log('cart button clickeddddd');
+        let cid = $("#customerSelect").val();
+        let iid = $("#itemSelect").val();
+        let unitPrice = $("#unitPrice").val();
+        let qtyOnHand = $("#qtyOnHand").val();
+        let qty = $("#qty").val();
+
+        let total = unitPrice * qty;
+        tot = tot + total;
+
+        console.log(cid, iid,unitPrice,qtyOnHand, qty);
+
+        let cartobj = {cid, iid,unitPrice,qtyOnHand, qty};
+        cart.push(cartobj);
+        console.log(cart);
+        $("#total1").val('Order Total: '+tot);
+
+        loadCartData();
+    })
+
+    function loadCartData(){
+        $('#orderTableBody').empty();
+        for (let i = 0; i < cart.length; i++) {
+            let row = `<tr>
+        <td>${cart[i].cid}</td>
+        <td>${cart[i].iid}</td>
+        <td>${cart[i].unitPrice}</td>
+        <td>${cart[i].qtyOnHand}</td>
+        <td>${cart[i].qty}</td>
+        </tr>`;
+            $('#orderTableBody').append(row);
+        }
+    }
+
+
+
+
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
